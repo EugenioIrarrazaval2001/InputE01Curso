@@ -1,0 +1,1971 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <title>Formulario Polla Mundialera</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050915;
+      --bg-soft: #07111f;
+      --card: #101a2c;
+      --card-strong: #14223a;
+      --line: rgba(255, 255, 255, 0.1);
+      --text: #f5f7fb;
+      --muted: #aeb8c9;
+      --accent: #18d3a2;
+      --accent-2: #f7c948;
+      --danger: #ff6b6b;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(24, 211, 162, 0.16), transparent 28rem),
+        radial-gradient(circle at 95% 12%, rgba(247, 201, 72, 0.12), transparent 22rem),
+        linear-gradient(180deg, #07111f 0%, #050915 45%, #040711 100%);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .page-shell {
+      width: min(100%, 880px);
+      margin: 0 auto;
+      padding: 20px 16px 112px;
+    }
+
+    .hero {
+      padding: 18px 2px 16px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 12px;
+      color: var(--accent-2);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(2rem, 9vw, 4rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .form-panel {
+      margin-top: 14px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(16, 26, 44, 0.82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .participant-field,
+    .champion-field {
+      grid-column: 1 / -1;
+    }
+
+    .field label,
+    .section-title {
+      color: #dfe6f5;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    .field-help {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 16px;
+      background: rgba(5, 9, 21, 0.68);
+      color: var(--text);
+      outline: none;
+      padding: 0 14px;
+      transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: rgba(24, 211, 162, 0.72);
+      box-shadow: 0 0 0 4px rgba(24, 211, 162, 0.13);
+      background: rgba(6, 13, 28, 0.9);
+    }
+
+    .matches-head {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      margin: 18px -16px 14px;
+      padding: 12px 16px;
+      border-block: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(5, 9, 21, 0.84);
+      backdrop-filter: blur(16px);
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      overflow: hidden;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 220ms ease;
+    }
+
+    .matches {
+      display: grid;
+      gap: 14px;
+    }
+
+    .match-card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(20, 34, 58, 0.96), rgba(12, 20, 36, 0.96));
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.25);
+      padding: 15px;
+    }
+
+    .match-card.is-complete {
+      border-color: rgba(24, 211, 162, 0.45);
+    }
+
+    .match-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .match-state {
+      color: var(--accent-2);
+      text-align: right;
+      text-transform: none;
+    }
+
+    .match-card.is-complete .match-state {
+      color: var(--accent);
+    }
+
+    .match-title {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      margin: 14px 0 16px;
+      font-size: clamp(1.12rem, 5vw, 1.55rem);
+      font-weight: 900;
+      line-height: 1.12;
+      text-align: center;
+    }
+
+    .match-title .team-name {
+      display: inline-flex;
+      min-width: 0;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      overflow-wrap: anywhere;
+    }
+
+    .match-title .team-name span {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .flag-img {
+      display: inline-block;
+      width: 1.35em;
+      height: 0.95em;
+      flex: 0 0 auto;
+      border-radius: 0.16em;
+      background: rgba(255, 255, 255, 0.92);
+      object-fit: cover;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 4px 10px rgba(0, 0, 0, 0.18);
+    }
+
+    .match-title small {
+      color: var(--accent-2);
+      font-size: 0.85rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .option-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .champion-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .option-pill {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 52px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.055);
+      color: #eaf0fb;
+      cursor: pointer;
+      padding: 13px 14px;
+      user-select: none;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    .option-pill:active {
+      transform: scale(0.99);
+    }
+
+    .option-pill input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .option-pill > span {
+      width: 100%;
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .champion-pill > span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      text-align: center;
+    }
+
+    .option-pill.is-selected,
+    .option-pill:has(input:checked) {
+      border-color: rgba(24, 211, 162, 0.82);
+      background: rgba(24, 211, 162, 0.18);
+      box-shadow: inset 0 0 0 1px rgba(24, 211, 162, 0.22);
+    }
+
+    .submit-bar {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 10;
+      padding: 12px max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(5, 9, 21, 0.9);
+      backdrop-filter: blur(18px);
+    }
+
+    .submit-inner {
+      display: grid;
+      width: min(100%, 880px);
+      margin: 0 auto;
+      gap: 8px;
+    }
+
+    .submit-button {
+      min-height: 56px;
+      border: 0;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), #54e6c2);
+      color: #04100d;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 950;
+      box-shadow: 0 14px 34px rgba(24, 211, 162, 0.24);
+      transition: transform 140ms ease, opacity 140ms ease, filter 140ms ease;
+    }
+
+    .submit-button:active {
+      transform: scale(0.99);
+    }
+
+    .submit-button:disabled {
+      cursor: not-allowed;
+      filter: grayscale(0.75);
+      opacity: 0.44;
+      box-shadow: none;
+    }
+
+    .status-message {
+      min-height: 20px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .status-message.ok {
+      color: var(--accent);
+    }
+
+    .status-message.warn {
+      color: var(--accent-2);
+    }
+
+    .status-message.error {
+      color: var(--danger);
+    }
+
+    .deadline-notice {
+      margin: 8px 0 14px;
+      border: 1px solid rgba(24, 211, 162, 0.2);
+      border-radius: 18px;
+      background: rgba(24, 211, 162, 0.08);
+      color: #dfe6f5;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .deadline-notice.error {
+      border-color: rgba(255, 107, 107, 0.34);
+      background: rgba(255, 107, 107, 0.1);
+      color: #ffc6c6;
+    }
+
+    .form-panel.is-locked input,
+    .form-panel.is-locked select,
+    .form-panel.is-locked textarea {
+      cursor: not-allowed;
+      opacity: 0.72;
+    }
+
+    .form-panel.is-locked .option-pill {
+      cursor: not-allowed;
+      opacity: 0.58;
+    }
+
+    .form-panel.is-locked .option-pill input {
+      opacity: 0;
+    }
+
+    .app-section[hidden] {
+      display: none !important;
+    }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      margin: 0 0 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #eaf0fb;
+      cursor: pointer;
+      padding: 0 14px;
+      font-size: 0.94rem;
+      font-weight: 850;
+      transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+    }
+
+    .nav-back:active {
+      transform: scale(0.99);
+    }
+
+    .menu-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .menu-hero {
+      padding-top: 28px;
+      text-align: center;
+    }
+
+    .menu-title {
+      max-width: none;
+      font-size: clamp(2.4rem, 11.2vw, 5.3rem);
+      line-height: 0.92;
+    }
+
+    .section-title-main {
+      max-width: none;
+      font-size: clamp(2rem, 8.8vw, 4.3rem);
+      line-height: 0.95;
+      text-align: center;
+    }
+
+    .menu-card {
+      width: 100%;
+      min-height: 68px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(20, 34, 58, 0.96), rgba(12, 20, 36, 0.96));
+      color: var(--text);
+      cursor: pointer;
+      padding: 0 18px;
+      text-align: center;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
+      transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+    }
+
+    .menu-card:active {
+      transform: scale(0.99);
+    }
+
+    .menu-card strong {
+      display: block;
+      font-size: 1.06rem;
+      line-height: 1.2;
+    }
+
+    .content-panel {
+      display: grid;
+      gap: 16px;
+      margin-top: 14px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(16, 26, 44, 0.82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .rules-block {
+      display: grid;
+      gap: 8px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .rules-block:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .rules-block h2 {
+      margin: 0;
+      font-size: 1.16rem;
+      line-height: 1.25;
+    }
+
+    .rules-block p,
+    .rules-block li {
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .rules-block p {
+      margin: 0;
+    }
+
+    .rules-block ul,
+    .rules-block ol {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    .score-table {
+      overflow: hidden;
+      display: grid;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      background: rgba(5, 9, 21, 0.32);
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      min-height: 46px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+    }
+
+    .score-row:last-child {
+      border-bottom: 0;
+    }
+
+    .score-row strong {
+      color: #eaf0fb;
+      font-size: 1.05rem;
+    }
+
+    .score-row span:last-child {
+      color: var(--text);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .score-row.score-total {
+      min-height: 58px;
+      border-top: 1px solid rgba(24, 211, 162, 0.35);
+      background: linear-gradient(135deg, rgba(24, 211, 162, 0.18), rgba(247, 201, 72, 0.12));
+      color: var(--text);
+    }
+
+    .score-row.score-total strong,
+    .score-row.score-total span:last-child {
+      color: var(--accent);
+      font-size: 1.16rem;
+    }
+
+    .payment-card {
+      display: grid;
+      gap: 10px;
+      border: 1px solid rgba(24, 211, 162, 0.22);
+      border-radius: 18px;
+      background: rgba(24, 211, 162, 0.08);
+      padding: 14px;
+    }
+
+    .payment-row {
+      display: grid;
+      grid-template-columns: minmax(96px, auto) minmax(0, 1fr);
+      gap: 8px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .payment-row strong {
+      color: #eaf0fb;
+    }
+
+    .copy-button {
+      min-height: 52px;
+      border: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), #54e6c2);
+      color: #04100d;
+      cursor: pointer;
+      padding: 0 14px;
+      font-weight: 950;
+    }
+
+    .unavailable-card {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+      padding: 22px 16px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(16, 26, 44, 0.82);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .unavailable-card h2 {
+      margin: 0;
+      font-size: 1.35rem;
+    }
+
+    .unavailable-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    @media (min-width: 720px) {
+      .page-shell {
+        padding-top: 32px;
+      }
+
+      .form-panel {
+        padding: 22px;
+      }
+
+      .field-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .option-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .champion-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .content-panel {
+        padding: 22px;
+      }
+
+      .matches-head {
+        top: 10px;
+        margin-inline: 0;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section id="section-menu" class="app-section">
+      <section class="hero menu-hero">
+        <h1 class="menu-title">🏆 Polla Mundialera 2026</h1>
+      </section>
+
+      <section class="menu-grid" aria-label="Secciones disponibles">
+        <button class="menu-card" type="button" data-section-target="bases">
+          <strong>Bases de la polla</strong>
+        </button>
+        <button class="menu-card" type="button" onclick="window.location.href='https://eugenioirarrazaval2001.github.io/polla-mundial/familia/index.html'">
+          <strong>Tabla de posiciones</strong>
+        </button>
+        <button class="menu-card" type="button" data-section-target="fase-grupos">
+          <strong>Formulario fase de grupos</strong>
+        </button>
+        <button class="menu-card" type="button" data-section-target="dieciseisavos">
+          <strong>Formulario dieciseisavos</strong>
+        </button>
+        <button class="menu-card" type="button" data-section-target="octavos">
+          <strong>Formulario octavos</strong>
+        </button>
+        <button class="menu-card" type="button" data-section-target="cuartos">
+          <strong>Formulario cuartos</strong>
+        </button>
+        <button class="menu-card" type="button" data-section-target="semifinales">
+          <strong>Formulario semifinales</strong>
+        </button>
+        <button class="menu-card" type="button" data-section-target="final">
+          <strong>Formulario final</strong>
+        </button>
+      </section>
+    </section>
+
+    <section id="section-bases" class="app-section" hidden>
+      <button class="nav-back" type="button" data-section-target="menu">Volver al menú</button>
+      <section class="hero">
+        <p class="eyebrow">🏆 Bases Polla Mundialera</p>
+        <h1>Bases de la Polla Mundialera</h1>
+        <p>Reglas generales, plazos, puntajes, premios y datos de transferencia.</p>
+      </section>
+
+      <section class="content-panel">
+        <article class="rules-block">
+          <h2>1. Formato general</h2>
+          <ul>
+            <li>La polla se juega respondiendo en cada ronda el formulario web.</li>
+            <li>Al terminarse una ronda se libera el formulario de la siguiente, el cual debe ser respondido antes del comienzo de la nueva ronda.</li>
+            <li>Se puede responder cada formulario todas las veces que se quiera, por si quieres cambiar tus respuestas.</li>
+            <li>Se consideran 25 partidos seleccionados de la fase de grupo más las eliminatorias completas.</li>
+            <li>El valor de inscripción es de $3000 por participante. Pueden participar todos los que quieran por familia.</li>
+          </ul>
+        </article>
+
+        <article class="rules-block">
+          <h2>2. Plazos</h2>
+          <p>Una hora antes del comienzo del primer partido de cada fase, el formulario respectivo deja de aceptar respuestas.</p>
+          <p>El pago de inscripción es hasta el inicio del primer partido de la fase de grupos.</p>
+        </article>
+
+        <article class="rules-block">
+          <h2>3. Ranking</h2>
+          <p>El ranking se actualiza todos los días.</p>
+        </article>
+
+        <article class="rules-block">
+          <h2>4. Premio</h2>
+          <ul>
+            <li>🥇 El ganador se lleva el 60% del pozo.</li>
+            <li>🥈 El segundo se lleva el 30% del pozo.</li>
+            <li>🥉 El tercero se lleva el 10% del pozo.</li>
+          </ul>
+        </article>
+
+        <article class="rules-block">
+          <h2>5. Sistema de puntos</h2>
+          <ul>
+            <li>1 punto por partido para la fase de grupos, dieciseisavos y octavos.</li>
+            <li>2 puntos por partido para los cuartos y las semifinales.</li>
+            <li>3 puntos para la final.</li>
+            <li>1 punto extra por partido eliminatorio por acertar cómo pasa el equipo: 90 minutos, tiempo extra o penales. Para sumarlo, es requisito haber acertado quién pasa.</li>
+            <li>5 puntos bonus por acertar al campeón al comienzo del torneo.</li>
+          </ul>
+        </article>
+
+        <article class="rules-block">
+          <h2>Puntajes máximos por ronda</h2>
+          <div class="score-table" aria-label="Puntajes máximos por ronda">
+            <div class="score-row"><span>Fase de grupos</span><strong>25 pts</strong></div>
+            <div class="score-row"><span>Dieciseisavos</span><strong>32 pts</strong></div>
+            <div class="score-row"><span>Octavos</span><strong>16 pts</strong></div>
+            <div class="score-row"><span>Cuartos</span><strong>12 pts</strong></div>
+            <div class="score-row"><span>Semifinales</span><strong>6 pts</strong></div>
+            <div class="score-row"><span>Final</span><strong>4 pts</strong></div>
+            <div class="score-row"><span>Bonus campeón</span><strong>5 pts</strong></div>
+            <div class="score-row score-total"><span>Total máximo</span><strong>100 pts</strong></div>
+          </div>
+        </article>
+
+        <article class="rules-block">
+          <h2>Datos de transferencia</h2>
+          <p>El pago debe realizarse a la siguiente cuenta bancaria:</p>
+          <div class="payment-card">
+            <div class="payment-row"><strong>Nombre:</strong><span>Eugenio Irarrazaval</span></div>
+            <div class="payment-row"><strong>RUT:</strong><span>20829077-0</span></div>
+            <div class="payment-row"><strong>Banco:</strong><span>Banco Santander</span></div>
+            <div class="payment-row"><strong>Tipo de cuenta:</strong><span>Cuenta Vista</span></div>
+            <div class="payment-row"><strong>Número de cuenta:</strong><span>0-011-00-46130-3</span></div>
+            <div class="payment-row"><strong>Correo:</strong><span>eirarrazavalr@gmail.com</span></div>
+          </div>
+          <button id="copyTransferButton" class="copy-button" type="button">Copiar datos de transferencia</button>
+          <div id="copyTransferStatus" class="status-message" role="status" aria-live="polite"></div>
+        </article>
+      </section>
+    </section>
+
+    <section id="section-fase-grupos" class="app-section form-section" hidden>
+      <button class="nav-back" type="button" data-section-target="menu">Volver al menú</button>
+      <section class="hero">
+        <h1 class="section-title-main">🏆 Polla Mundialera Etapa 1 (Fase de grupos)</h1>
+      </section>
+      <div id="faseDeadlineNotice" class="deadline-notice" role="status" aria-live="polite"></div>
+
+      <form id="predictionForm" class="form-panel">
+        <section class="field-grid" aria-label="Datos del participante">
+
+          <div class="field participant-field">
+            <label for="nombre">Nombre del participante</label>
+            <select id="nombre" name="nombre" required>
+              <option value="">Selecciona tu nombre</option><option value="Nicolás Fuentes">Nicolás Fuentes</option><option value="Camila Reyes">Camila Reyes</option><option value="Martín Soto">Martín Soto</option><option value="Isidora Vargas">Isidora Vargas</option><option value="Benjamín López">Benjamín López</option><option value="Antonia Paredes">Antonia Paredes</option><option value="Vicente Aguilera">Vicente Aguilera</option><option value="Trinidad Campos">Trinidad Campos</option><option value="Joaquín Navarro">Joaquín Navarro</option><option value="Catalina Salinas">Catalina Salinas</option><option value="Matías Riquelme">Matías Riquelme</option><option value="Florencia Araya">Florencia Araya</option><option value="Sebastián Contreras">Sebastián Contreras</option><option value="Josefa Molina">Josefa Molina</option><option value="Agustín Valdés">Agustín Valdés</option><option value="Emilia Cárdenas">Emilia Cárdenas</option><option value="Maximiliano Bravo">Maximiliano Bravo</option><option value="Fernanda Tapia">Fernanda Tapia</option><option value="Cristóbal Méndez">Cristóbal Méndez</option><option value="Renata Espinoza">Renata Espinoza</option><option value="Santiago Sepúlveda">Santiago Sepúlveda</option><option value="Maite Carrasco">Maite Carrasco</option><option value="Lucas Villalobos">Lucas Villalobos</option><option value="Amanda Gutiérrez">Amanda Gutiérrez</option><option value="Ignacio Farías">Ignacio Farías</option><option value="Dominga Saavedra">Dominga Saavedra</option><option value="Felipe Bustamante">Felipe Bustamante</option><option value="Laura Escobar">Laura Escobar</option><option value="Tomás Arancibia">Tomás Arancibia</option><option value="Valentina Leiva">Valentina Leiva</option><option value="Gabriel Orellana">Gabriel Orellana</option><option value="Javiera Sandoval">Javiera Sandoval</option><option value="Rodrigo Calderón">Rodrigo Calderón</option><option value="Constanza Lagos">Constanza Lagos</option><option value="Pablo Henríquez">Pablo Henríquez</option><option value="Martina Peña">Martina Peña</option><option value="Daniel Muñoz">Daniel Muñoz</option><option value="Agustina Vera">Agustina Vera</option><option value="Francisco Rivas">Francisco Rivas</option><option value="Josefina Correa">Josefina Correa</option><option value="Bastián Salazar">Bastián Salazar</option><option value="Magdalena Vidal">Magdalena Vidal</option><option value="Julián Cisternas">Julián Cisternas</option><option value="Rocío Gallardo">Rocío Gallardo</option><option value="Simón Figueroa">Simón Figueroa</option><option value="Catalina Donoso">Catalina Donoso</option><option value="Andrés Cáceres">Andrés Cáceres</option><option value="Antonia Zamora">Antonia Zamora</option><option value="Diego Poblete">Diego Poblete</option><option value="Sofía San Martín">Sofía San Martín</option>
+            </select>
+          </div>
+          <div class="field champion-field">
+            <span class="section-title">Campeón del Mundo</span>
+            <div class="champion-grid" role="radiogroup" aria-label="Campeón del Mundo">
+              
+            <label class="option-pill champion-pill" for="campeon-0">
+              <input id="campeon-0" type="radio" name="campeon" value="Inglaterra" required>
+              <span><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f3f4-e0067-e0062-e0065-e006e-e0067-e007f.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Inglaterra</span></span>
+            </label>
+
+            <label class="option-pill champion-pill" for="campeon-1">
+              <input id="campeon-1" type="radio" name="campeon" value="Francia" required>
+              <span><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Francia</span></span>
+            </label>
+
+            <label class="option-pill champion-pill" for="campeon-2">
+              <input id="campeon-2" type="radio" name="campeon" value="Brasil" required>
+              <span><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e7-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Brasil</span></span>
+            </label>
+
+            <label class="option-pill champion-pill" for="campeon-3">
+              <input id="campeon-3" type="radio" name="campeon" value="España" required>
+              <span><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ea-1f1f8.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>España</span></span>
+            </label>
+
+            <label class="option-pill champion-pill" for="campeon-4">
+              <input id="campeon-4" type="radio" name="campeon" value="Portugal" required>
+              <span><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f5-1f1f9.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Portugal</span></span>
+            </label>
+
+            <label class="option-pill champion-pill" for="campeon-5">
+              <input id="campeon-5" type="radio" name="campeon" value="Alemania" required>
+              <span><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e9-1f1ea.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Alemania</span></span>
+            </label>
+
+            <label class="option-pill champion-pill" for="campeon-6">
+              <input id="campeon-6" type="radio" name="campeon" value="Argentina" required>
+              <span><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e6-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Argentina</span></span>
+            </label>
+
+            <label class="option-pill champion-pill" for="campeon-7">
+              <input id="campeon-7" type="radio" name="campeon" value="Otro" required>
+              <span><span>Otro</span></span>
+            </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="matches-head" aria-label="Progreso">
+          <div class="progress-row">
+            <span id="progressText">Respondidas 0 de 25</span>
+            <span>Fase de Grupos</span>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+        </section>
+
+        <section class="matches" aria-label="Partidos">
+          
+        <article class="match-card" data-match-card data-partido="1" data-equipo-a="México" data-equipo-b="Sudáfrica">
+          <div class="match-topline">
+            <span>Partido 1</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f2-1f1fd.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>México</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ff-1f1e6.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Sudáfrica</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-1-opcion-0">
+              <input id="partido-1-opcion-0" type="radio" name="partido_1" value="Gana México" required>
+              <span>Gana México</span>
+            </label>
+            <label class="option-pill" for="partido-1-opcion-1">
+              <input id="partido-1-opcion-1" type="radio" name="partido_1" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-1-opcion-2">
+              <input id="partido-1-opcion-2" type="radio" name="partido_1" value="Gana Sudáfrica" required>
+              <span>Gana Sudáfrica</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="2" data-equipo-a="Estados Unidos" data-equipo-b="Paraguay">
+          <div class="match-topline">
+            <span>Partido 2</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1fa-1f1f8.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Estados Unidos</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f5-1f1fe.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Paraguay</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-2-opcion-0">
+              <input id="partido-2-opcion-0" type="radio" name="partido_2" value="Gana Estados Unidos" required>
+              <span>Gana Estados Unidos</span>
+            </label>
+            <label class="option-pill" for="partido-2-opcion-1">
+              <input id="partido-2-opcion-1" type="radio" name="partido_2" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-2-opcion-2">
+              <input id="partido-2-opcion-2" type="radio" name="partido_2" value="Gana Paraguay" required>
+              <span>Gana Paraguay</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="3" data-equipo-a="Brasil" data-equipo-b="Marruecos">
+          <div class="match-topline">
+            <span>Partido 3</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e7-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Brasil</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f2-1f1e6.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Marruecos</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-3-opcion-0">
+              <input id="partido-3-opcion-0" type="radio" name="partido_3" value="Gana Brasil" required>
+              <span>Gana Brasil</span>
+            </label>
+            <label class="option-pill" for="partido-3-opcion-1">
+              <input id="partido-3-opcion-1" type="radio" name="partido_3" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-3-opcion-2">
+              <input id="partido-3-opcion-2" type="radio" name="partido_3" value="Gana Marruecos" required>
+              <span>Gana Marruecos</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="4" data-equipo-a="Australia" data-equipo-b="Turquía">
+          <div class="match-topline">
+            <span>Partido 4</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e6-1f1fa.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Australia</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f9-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Turquía</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-4-opcion-0">
+              <input id="partido-4-opcion-0" type="radio" name="partido_4" value="Gana Australia" required>
+              <span>Gana Australia</span>
+            </label>
+            <label class="option-pill" for="partido-4-opcion-1">
+              <input id="partido-4-opcion-1" type="radio" name="partido_4" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-4-opcion-2">
+              <input id="partido-4-opcion-2" type="radio" name="partido_4" value="Gana Turquía" required>
+              <span>Gana Turquía</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="5" data-equipo-a="Holanda" data-equipo-b="Japón">
+          <div class="match-topline">
+            <span>Partido 5</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f3-1f1f1.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Holanda</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ef-1f1f5.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Japón</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-5-opcion-0">
+              <input id="partido-5-opcion-0" type="radio" name="partido_5" value="Gana Holanda" required>
+              <span>Gana Holanda</span>
+            </label>
+            <label class="option-pill" for="partido-5-opcion-1">
+              <input id="partido-5-opcion-1" type="radio" name="partido_5" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-5-opcion-2">
+              <input id="partido-5-opcion-2" type="radio" name="partido_5" value="Gana Japón" required>
+              <span>Gana Japón</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="6" data-equipo-a="Bélgica" data-equipo-b="Egipto">
+          <div class="match-topline">
+            <span>Partido 6</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e7-1f1ea.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Bélgica</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ea-1f1ec.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Egipto</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-6-opcion-0">
+              <input id="partido-6-opcion-0" type="radio" name="partido_6" value="Gana Bélgica" required>
+              <span>Gana Bélgica</span>
+            </label>
+            <label class="option-pill" for="partido-6-opcion-1">
+              <input id="partido-6-opcion-1" type="radio" name="partido_6" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-6-opcion-2">
+              <input id="partido-6-opcion-2" type="radio" name="partido_6" value="Gana Egipto" required>
+              <span>Gana Egipto</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="7" data-equipo-a="Francia" data-equipo-b="Senegal">
+          <div class="match-topline">
+            <span>Partido 7</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Francia</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f8-1f1f3.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Senegal</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-7-opcion-0">
+              <input id="partido-7-opcion-0" type="radio" name="partido_7" value="Gana Francia" required>
+              <span>Gana Francia</span>
+            </label>
+            <label class="option-pill" for="partido-7-opcion-1">
+              <input id="partido-7-opcion-1" type="radio" name="partido_7" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-7-opcion-2">
+              <input id="partido-7-opcion-2" type="radio" name="partido_7" value="Gana Senegal" required>
+              <span>Gana Senegal</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="8" data-equipo-a="Argentina" data-equipo-b="Argelia">
+          <div class="match-topline">
+            <span>Partido 8</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e6-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Argentina</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e9-1f1ff.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Argelia</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-8-opcion-0">
+              <input id="partido-8-opcion-0" type="radio" name="partido_8" value="Gana Argentina" required>
+              <span>Gana Argentina</span>
+            </label>
+            <label class="option-pill" for="partido-8-opcion-1">
+              <input id="partido-8-opcion-1" type="radio" name="partido_8" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-8-opcion-2">
+              <input id="partido-8-opcion-2" type="radio" name="partido_8" value="Gana Argelia" required>
+              <span>Gana Argelia</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="9" data-equipo-a="Inglaterra" data-equipo-b="Croacia">
+          <div class="match-topline">
+            <span>Partido 9</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f3f4-e0067-e0062-e0065-e006e-e0067-e007f.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Inglaterra</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ed-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Croacia</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-9-opcion-0">
+              <input id="partido-9-opcion-0" type="radio" name="partido_9" value="Gana Inglaterra" required>
+              <span>Gana Inglaterra</span>
+            </label>
+            <label class="option-pill" for="partido-9-opcion-1">
+              <input id="partido-9-opcion-1" type="radio" name="partido_9" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-9-opcion-2">
+              <input id="partido-9-opcion-2" type="radio" name="partido_9" value="Gana Croacia" required>
+              <span>Gana Croacia</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="10" data-equipo-a="México" data-equipo-b="Corea">
+          <div class="match-topline">
+            <span>Partido 10</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f2-1f1fd.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>México</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f0-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Corea</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-10-opcion-0">
+              <input id="partido-10-opcion-0" type="radio" name="partido_10" value="Gana México" required>
+              <span>Gana México</span>
+            </label>
+            <label class="option-pill" for="partido-10-opcion-1">
+              <input id="partido-10-opcion-1" type="radio" name="partido_10" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-10-opcion-2">
+              <input id="partido-10-opcion-2" type="radio" name="partido_10" value="Gana Corea" required>
+              <span>Gana Corea</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="11" data-equipo-a="Estados Unidos" data-equipo-b="Australia">
+          <div class="match-topline">
+            <span>Partido 11</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1fa-1f1f8.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Estados Unidos</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e6-1f1fa.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Australia</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-11-opcion-0">
+              <input id="partido-11-opcion-0" type="radio" name="partido_11" value="Gana Estados Unidos" required>
+              <span>Gana Estados Unidos</span>
+            </label>
+            <label class="option-pill" for="partido-11-opcion-1">
+              <input id="partido-11-opcion-1" type="radio" name="partido_11" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-11-opcion-2">
+              <input id="partido-11-opcion-2" type="radio" name="partido_11" value="Gana Australia" required>
+              <span>Gana Australia</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="12" data-equipo-a="Holanda" data-equipo-b="Suecia">
+          <div class="match-topline">
+            <span>Partido 12</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f3-1f1f1.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Holanda</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f8-1f1ea.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Suecia</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-12-opcion-0">
+              <input id="partido-12-opcion-0" type="radio" name="partido_12" value="Gana Holanda" required>
+              <span>Gana Holanda</span>
+            </label>
+            <label class="option-pill" for="partido-12-opcion-1">
+              <input id="partido-12-opcion-1" type="radio" name="partido_12" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-12-opcion-2">
+              <input id="partido-12-opcion-2" type="radio" name="partido_12" value="Gana Suecia" required>
+              <span>Gana Suecia</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="13" data-equipo-a="Bélgica" data-equipo-b="Irán">
+          <div class="match-topline">
+            <span>Partido 13</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e7-1f1ea.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Bélgica</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Irán</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-13-opcion-0">
+              <input id="partido-13-opcion-0" type="radio" name="partido_13" value="Gana Bélgica" required>
+              <span>Gana Bélgica</span>
+            </label>
+            <label class="option-pill" for="partido-13-opcion-1">
+              <input id="partido-13-opcion-1" type="radio" name="partido_13" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-13-opcion-2">
+              <input id="partido-13-opcion-2" type="radio" name="partido_13" value="Gana Irán" required>
+              <span>Gana Irán</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="14" data-equipo-a="Argentina" data-equipo-b="Austria">
+          <div class="match-topline">
+            <span>Partido 14</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e6-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Argentina</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e6-1f1f9.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Austria</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-14-opcion-0">
+              <input id="partido-14-opcion-0" type="radio" name="partido_14" value="Gana Argentina" required>
+              <span>Gana Argentina</span>
+            </label>
+            <label class="option-pill" for="partido-14-opcion-1">
+              <input id="partido-14-opcion-1" type="radio" name="partido_14" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-14-opcion-2">
+              <input id="partido-14-opcion-2" type="radio" name="partido_14" value="Gana Austria" required>
+              <span>Gana Austria</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="15" data-equipo-a="Noruega" data-equipo-b="Senegal">
+          <div class="match-topline">
+            <span>Partido 15</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f3-1f1f4.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Noruega</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f8-1f1f3.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Senegal</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-15-opcion-0">
+              <input id="partido-15-opcion-0" type="radio" name="partido_15" value="Gana Noruega" required>
+              <span>Gana Noruega</span>
+            </label>
+            <label class="option-pill" for="partido-15-opcion-1">
+              <input id="partido-15-opcion-1" type="radio" name="partido_15" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-15-opcion-2">
+              <input id="partido-15-opcion-2" type="radio" name="partido_15" value="Gana Senegal" required>
+              <span>Gana Senegal</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="16" data-equipo-a="Suiza" data-equipo-b="Canadá">
+          <div class="match-topline">
+            <span>Partido 16</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e8-1f1ed.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Suiza</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e8-1f1e6.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Canadá</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-16-opcion-0">
+              <input id="partido-16-opcion-0" type="radio" name="partido_16" value="Gana Suiza" required>
+              <span>Gana Suiza</span>
+            </label>
+            <label class="option-pill" for="partido-16-opcion-1">
+              <input id="partido-16-opcion-1" type="radio" name="partido_16" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-16-opcion-2">
+              <input id="partido-16-opcion-2" type="radio" name="partido_16" value="Gana Canadá" required>
+              <span>Gana Canadá</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="17" data-equipo-a="Ecuador" data-equipo-b="Alemania">
+          <div class="match-topline">
+            <span>Partido 17</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ea-1f1e8.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Ecuador</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e9-1f1ea.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Alemania</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-17-opcion-0">
+              <input id="partido-17-opcion-0" type="radio" name="partido_17" value="Gana Ecuador" required>
+              <span>Gana Ecuador</span>
+            </label>
+            <label class="option-pill" for="partido-17-opcion-1">
+              <input id="partido-17-opcion-1" type="radio" name="partido_17" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-17-opcion-2">
+              <input id="partido-17-opcion-2" type="radio" name="partido_17" value="Gana Alemania" required>
+              <span>Gana Alemania</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="18" data-equipo-a="Japón" data-equipo-b="Suecia">
+          <div class="match-topline">
+            <span>Partido 18</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ef-1f1f5.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Japón</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f8-1f1ea.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Suecia</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-18-opcion-0">
+              <input id="partido-18-opcion-0" type="radio" name="partido_18" value="Gana Japón" required>
+              <span>Gana Japón</span>
+            </label>
+            <label class="option-pill" for="partido-18-opcion-1">
+              <input id="partido-18-opcion-1" type="radio" name="partido_18" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-18-opcion-2">
+              <input id="partido-18-opcion-2" type="radio" name="partido_18" value="Gana Suecia" required>
+              <span>Gana Suecia</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="19" data-equipo-a="Turquía" data-equipo-b="Estados Unidos">
+          <div class="match-topline">
+            <span>Partido 19</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f9-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Turquía</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1fa-1f1f8.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Estados Unidos</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-19-opcion-0">
+              <input id="partido-19-opcion-0" type="radio" name="partido_19" value="Gana Turquía" required>
+              <span>Gana Turquía</span>
+            </label>
+            <label class="option-pill" for="partido-19-opcion-1">
+              <input id="partido-19-opcion-1" type="radio" name="partido_19" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-19-opcion-2">
+              <input id="partido-19-opcion-2" type="radio" name="partido_19" value="Gana Estados Unidos" required>
+              <span>Gana Estados Unidos</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="20" data-equipo-a="Paraguay" data-equipo-b="Australia">
+          <div class="match-topline">
+            <span>Partido 20</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f5-1f1fe.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Paraguay</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e6-1f1fa.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Australia</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-20-opcion-0">
+              <input id="partido-20-opcion-0" type="radio" name="partido_20" value="Gana Paraguay" required>
+              <span>Gana Paraguay</span>
+            </label>
+            <label class="option-pill" for="partido-20-opcion-1">
+              <input id="partido-20-opcion-1" type="radio" name="partido_20" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-20-opcion-2">
+              <input id="partido-20-opcion-2" type="radio" name="partido_20" value="Gana Australia" required>
+              <span>Gana Australia</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="21" data-equipo-a="Uruguay" data-equipo-b="España">
+          <div class="match-topline">
+            <span>Partido 21</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1fa-1f1fe.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Uruguay</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ea-1f1f8.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>España</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-21-opcion-0">
+              <input id="partido-21-opcion-0" type="radio" name="partido_21" value="Gana Uruguay" required>
+              <span>Gana Uruguay</span>
+            </label>
+            <label class="option-pill" for="partido-21-opcion-1">
+              <input id="partido-21-opcion-1" type="radio" name="partido_21" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-21-opcion-2">
+              <input id="partido-21-opcion-2" type="radio" name="partido_21" value="Gana España" required>
+              <span>Gana España</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="22" data-equipo-a="Noruega" data-equipo-b="Francia">
+          <div class="match-topline">
+            <span>Partido 22</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f3-1f1f4.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Noruega</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Francia</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-22-opcion-0">
+              <input id="partido-22-opcion-0" type="radio" name="partido_22" value="Gana Noruega" required>
+              <span>Gana Noruega</span>
+            </label>
+            <label class="option-pill" for="partido-22-opcion-1">
+              <input id="partido-22-opcion-1" type="radio" name="partido_22" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-22-opcion-2">
+              <input id="partido-22-opcion-2" type="radio" name="partido_22" value="Gana Francia" required>
+              <span>Gana Francia</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="23" data-equipo-a="Egipto" data-equipo-b="Irán">
+          <div class="match-topline">
+            <span>Partido 23</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ea-1f1ec.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Egipto</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1f7.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Irán</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-23-opcion-0">
+              <input id="partido-23-opcion-0" type="radio" name="partido_23" value="Gana Egipto" required>
+              <span>Gana Egipto</span>
+            </label>
+            <label class="option-pill" for="partido-23-opcion-1">
+              <input id="partido-23-opcion-1" type="radio" name="partido_23" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-23-opcion-2">
+              <input id="partido-23-opcion-2" type="radio" name="partido_23" value="Gana Irán" required>
+              <span>Gana Irán</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="24" data-equipo-a="Argelia" data-equipo-b="Austria">
+          <div class="match-topline">
+            <span>Partido 24</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e9-1f1ff.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Argelia</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e6-1f1f9.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Austria</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-24-opcion-0">
+              <input id="partido-24-opcion-0" type="radio" name="partido_24" value="Gana Argelia" required>
+              <span>Gana Argelia</span>
+            </label>
+            <label class="option-pill" for="partido-24-opcion-1">
+              <input id="partido-24-opcion-1" type="radio" name="partido_24" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-24-opcion-2">
+              <input id="partido-24-opcion-2" type="radio" name="partido_24" value="Gana Austria" required>
+              <span>Gana Austria</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="match-card" data-match-card data-partido="25" data-equipo-a="Colombia" data-equipo-b="Portugal">
+          <div class="match-topline">
+            <span>Partido 25</span>
+            <span class="match-state" data-match-state>Sin responder</span>
+          </div>
+          <div class="match-title">
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e8-1f1f4.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Colombia</span></div>
+            <small>vs</small>
+            <div class="team-name"><img class="flag-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f5-1f1f9.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" onerror="this.remove()"><span>Portugal</span></div>
+          </div>
+          <div class="option-grid">
+            
+            <label class="option-pill" for="partido-25-opcion-0">
+              <input id="partido-25-opcion-0" type="radio" name="partido_25" value="Gana Colombia" required>
+              <span>Gana Colombia</span>
+            </label>
+            <label class="option-pill" for="partido-25-opcion-1">
+              <input id="partido-25-opcion-1" type="radio" name="partido_25" value="Empate" required>
+              <span>Empate</span>
+            </label>
+            <label class="option-pill" for="partido-25-opcion-2">
+              <input id="partido-25-opcion-2" type="radio" name="partido_25" value="Gana Portugal" required>
+              <span>Gana Portugal</span>
+            </label>
+          </div>
+        </article>
+        </section>
+      </form>
+
+      <div class="submit-bar">
+        <div class="submit-inner">
+          <button id="submitButton" class="submit-button" type="submit" form="predictionForm" disabled>Enviar respuestas</button>
+          <div id="statusMessage" class="status-message" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-dieciseisavos" class="app-section" hidden>
+      <button class="nav-back" type="button" data-section-target="menu">Volver al menú</button>
+      <div class="unavailable-card">
+        <h2>Formulario dieciseisavos</h2>
+        <p data-unavailable-message="dieciseisavos">Este formulario todavía no se encuentra disponible. Se habilitará cuando estén definidos los partidos de esta ronda.</p>
+      </div>
+    </section>
+
+    <section id="section-octavos" class="app-section" hidden>
+      <button class="nav-back" type="button" data-section-target="menu">Volver al menú</button>
+      <div class="unavailable-card">
+        <h2>Formulario octavos</h2>
+        <p data-unavailable-message="octavos">Este formulario todavía no se encuentra disponible. Se habilitará cuando estén definidos los partidos de esta ronda.</p>
+      </div>
+    </section>
+
+    <section id="section-cuartos" class="app-section" hidden>
+      <button class="nav-back" type="button" data-section-target="menu">Volver al menú</button>
+      <div class="unavailable-card">
+        <h2>Formulario cuartos</h2>
+        <p data-unavailable-message="cuartos">Este formulario todavía no se encuentra disponible. Se habilitará cuando estén definidos los partidos de esta ronda.</p>
+      </div>
+    </section>
+
+    <section id="section-semifinales" class="app-section" hidden>
+      <button class="nav-back" type="button" data-section-target="menu">Volver al menú</button>
+      <div class="unavailable-card">
+        <h2>Formulario semifinales</h2>
+        <p data-unavailable-message="semifinales">Este formulario todavía no se encuentra disponible. Se habilitará cuando estén definidos los partidos de esta ronda.</p>
+      </div>
+    </section>
+
+    <section id="section-final" class="app-section" hidden>
+      <button class="nav-back" type="button" data-section-target="menu">Volver al menú</button>
+      <div class="unavailable-card">
+        <h2>Formulario final</h2>
+        <p data-unavailable-message="final">Este formulario todavía no se encuentra disponible. Se habilitará cuando estén definidos los partidos de esta ronda.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybBXFJiatIXBqeXPSle-3FovQtZ074LWgiI-8IU4oCvGi-_p0IOfZ3im8equmiyFJo/exec";
+    const ETAPA = "E01";
+    const GRUPO = "curso";
+    const FORM_METADATA = {"etapa": "E01", "grupo": "curso", "hoja": "Fase de Grupos", "generado": "2026-05-27T13:48:31", "total_partidos": 25};
+    const PARTIDOS = [{"numero": 1, "equipo_a": "México", "equipo_b": "Sudáfrica", "bandera_a": "🇲🇽", "bandera_b": "🇿🇦", "opciones": ["Gana México", "Empate", "Gana Sudáfrica"]}, {"numero": 2, "equipo_a": "Estados Unidos", "equipo_b": "Paraguay", "bandera_a": "🇺🇸", "bandera_b": "🇵🇾", "opciones": ["Gana Estados Unidos", "Empate", "Gana Paraguay"]}, {"numero": 3, "equipo_a": "Brasil", "equipo_b": "Marruecos", "bandera_a": "🇧🇷", "bandera_b": "🇲🇦", "opciones": ["Gana Brasil", "Empate", "Gana Marruecos"]}, {"numero": 4, "equipo_a": "Australia", "equipo_b": "Turquía", "bandera_a": "🇦🇺", "bandera_b": "🇹🇷", "opciones": ["Gana Australia", "Empate", "Gana Turquía"]}, {"numero": 5, "equipo_a": "Holanda", "equipo_b": "Japón", "bandera_a": "🇳🇱", "bandera_b": "🇯🇵", "opciones": ["Gana Holanda", "Empate", "Gana Japón"]}, {"numero": 6, "equipo_a": "Bélgica", "equipo_b": "Egipto", "bandera_a": "🇧🇪", "bandera_b": "🇪🇬", "opciones": ["Gana Bélgica", "Empate", "Gana Egipto"]}, {"numero": 7, "equipo_a": "Francia", "equipo_b": "Senegal", "bandera_a": "🇫🇷", "bandera_b": "🇸🇳", "opciones": ["Gana Francia", "Empate", "Gana Senegal"]}, {"numero": 8, "equipo_a": "Argentina", "equipo_b": "Argelia", "bandera_a": "🇦🇷", "bandera_b": "🇩🇿", "opciones": ["Gana Argentina", "Empate", "Gana Argelia"]}, {"numero": 9, "equipo_a": "Inglaterra", "equipo_b": "Croacia", "bandera_a": "🏴", "bandera_b": "🇭🇷", "opciones": ["Gana Inglaterra", "Empate", "Gana Croacia"]}, {"numero": 10, "equipo_a": "México", "equipo_b": "Corea", "bandera_a": "🇲🇽", "bandera_b": "🇰🇷", "opciones": ["Gana México", "Empate", "Gana Corea"]}, {"numero": 11, "equipo_a": "Estados Unidos", "equipo_b": "Australia", "bandera_a": "🇺🇸", "bandera_b": "🇦🇺", "opciones": ["Gana Estados Unidos", "Empate", "Gana Australia"]}, {"numero": 12, "equipo_a": "Holanda", "equipo_b": "Suecia", "bandera_a": "🇳🇱", "bandera_b": "🇸🇪", "opciones": ["Gana Holanda", "Empate", "Gana Suecia"]}, {"numero": 13, "equipo_a": "Bélgica", "equipo_b": "Irán", "bandera_a": "🇧🇪", "bandera_b": "🇮🇷", "opciones": ["Gana Bélgica", "Empate", "Gana Irán"]}, {"numero": 14, "equipo_a": "Argentina", "equipo_b": "Austria", "bandera_a": "🇦🇷", "bandera_b": "🇦🇹", "opciones": ["Gana Argentina", "Empate", "Gana Austria"]}, {"numero": 15, "equipo_a": "Noruega", "equipo_b": "Senegal", "bandera_a": "🇳🇴", "bandera_b": "🇸🇳", "opciones": ["Gana Noruega", "Empate", "Gana Senegal"]}, {"numero": 16, "equipo_a": "Suiza", "equipo_b": "Canadá", "bandera_a": "🇨🇭", "bandera_b": "🇨🇦", "opciones": ["Gana Suiza", "Empate", "Gana Canadá"]}, {"numero": 17, "equipo_a": "Ecuador", "equipo_b": "Alemania", "bandera_a": "🇪🇨", "bandera_b": "🇩🇪", "opciones": ["Gana Ecuador", "Empate", "Gana Alemania"]}, {"numero": 18, "equipo_a": "Japón", "equipo_b": "Suecia", "bandera_a": "🇯🇵", "bandera_b": "🇸🇪", "opciones": ["Gana Japón", "Empate", "Gana Suecia"]}, {"numero": 19, "equipo_a": "Turquía", "equipo_b": "Estados Unidos", "bandera_a": "🇹🇷", "bandera_b": "🇺🇸", "opciones": ["Gana Turquía", "Empate", "Gana Estados Unidos"]}, {"numero": 20, "equipo_a": "Paraguay", "equipo_b": "Australia", "bandera_a": "🇵🇾", "bandera_b": "🇦🇺", "opciones": ["Gana Paraguay", "Empate", "Gana Australia"]}, {"numero": 21, "equipo_a": "Uruguay", "equipo_b": "España", "bandera_a": "🇺🇾", "bandera_b": "🇪🇸", "opciones": ["Gana Uruguay", "Empate", "Gana España"]}, {"numero": 22, "equipo_a": "Noruega", "equipo_b": "Francia", "bandera_a": "🇳🇴", "bandera_b": "🇫🇷", "opciones": ["Gana Noruega", "Empate", "Gana Francia"]}, {"numero": 23, "equipo_a": "Egipto", "equipo_b": "Irán", "bandera_a": "🇪🇬", "bandera_b": "🇮🇷", "opciones": ["Gana Egipto", "Empate", "Gana Irán"]}, {"numero": 24, "equipo_a": "Argelia", "equipo_b": "Austria", "bandera_a": "🇩🇿", "bandera_b": "🇦🇹", "opciones": ["Gana Argelia", "Empate", "Gana Austria"]}, {"numero": 25, "equipo_a": "Colombia", "equipo_b": "Portugal", "bandera_a": "🇨🇴", "bandera_b": "🇵🇹", "opciones": ["Gana Colombia", "Empate", "Gana Portugal"]}];
+    const DEADLINES = {"fase-grupos": {"etapa_id": "E01", "section_id": "fase-grupos", "nombre_fase": "Fase de grupos", "kickoff_chile": "2026-06-11 15:00", "deadline_chile": "2026-06-11 14:00", "deadline_iso": "2026-06-11T14:00:00-04:00", "deadline_label": "11 de junio de 2026, 14:00", "habilitado": true, "mensaje_cerrado": "Este formulario ya está cerrado. El plazo para responder terminó el 11 de junio de 2026 a las 14:00 hrs de Chile."}, "dieciseisavos": {"etapa_id": "E02", "section_id": "dieciseisavos", "nombre_fase": "Dieciseisavos", "kickoff_chile": "2026-06-28 15:00", "deadline_chile": "2026-06-28 14:00", "deadline_iso": "2026-06-28T14:00:00-04:00", "deadline_label": "28 de junio de 2026, 14:00", "habilitado": false, "mensaje_cerrado": "Este formulario todavía no se encuentra disponible o está fuera de plazo."}, "octavos": {"etapa_id": "E03", "section_id": "octavos", "nombre_fase": "Octavos", "kickoff_chile": "2026-07-04 13:00", "deadline_chile": "2026-07-04 12:00", "deadline_iso": "2026-07-04T12:00:00-04:00", "deadline_label": "4 de julio de 2026, 12:00", "habilitado": false, "mensaje_cerrado": "Este formulario todavía no se encuentra disponible o está fuera de plazo."}, "cuartos": {"etapa_id": "E04", "section_id": "cuartos", "nombre_fase": "Cuartos", "kickoff_chile": "2026-07-09 16:00", "deadline_chile": "2026-07-09 15:00", "deadline_iso": "2026-07-09T15:00:00-04:00", "deadline_label": "9 de julio de 2026, 15:00", "habilitado": false, "mensaje_cerrado": "Este formulario todavía no se encuentra disponible o está fuera de plazo."}, "semifinales": {"etapa_id": "E05", "section_id": "semifinales", "nombre_fase": "Semifinales", "kickoff_chile": "2026-07-14 15:00", "deadline_chile": "2026-07-14 14:00", "deadline_iso": "2026-07-14T14:00:00-04:00", "deadline_label": "14 de julio de 2026, 14:00", "habilitado": false, "mensaje_cerrado": "Este formulario todavía no se encuentra disponible o está fuera de plazo."}, "final": {"etapa_id": "E06", "section_id": "final", "nombre_fase": "Final", "kickoff_chile": "2026-07-19 15:00", "deadline_chile": "2026-07-19 14:00", "deadline_iso": "2026-07-19T14:00:00-04:00", "deadline_label": "19 de julio de 2026, 14:00", "habilitado": false, "mensaje_cerrado": "Este formulario todavía no se encuentra disponible o está fuera de plazo."}};
+    const NOMBRES_PARTICIPANTES = ["Nicolás Fuentes", "Camila Reyes", "Martín Soto", "Isidora Vargas", "Benjamín López", "Antonia Paredes", "Vicente Aguilera", "Trinidad Campos", "Joaquín Navarro", "Catalina Salinas", "Matías Riquelme", "Florencia Araya", "Sebastián Contreras", "Josefa Molina", "Agustín Valdés", "Emilia Cárdenas", "Maximiliano Bravo", "Fernanda Tapia", "Cristóbal Méndez", "Renata Espinoza", "Santiago Sepúlveda", "Maite Carrasco", "Lucas Villalobos", "Amanda Gutiérrez", "Ignacio Farías", "Dominga Saavedra", "Felipe Bustamante", "Laura Escobar", "Tomás Arancibia", "Valentina Leiva", "Gabriel Orellana", "Javiera Sandoval", "Rodrigo Calderón", "Constanza Lagos", "Pablo Henríquez", "Martina Peña", "Daniel Muñoz", "Agustina Vera", "Francisco Rivas", "Josefina Correa", "Bastián Salazar", "Magdalena Vidal", "Julián Cisternas", "Rocío Gallardo", "Simón Figueroa", "Catalina Donoso", "Andrés Cáceres", "Antonia Zamora", "Diego Poblete", "Sofía San Martín"];
+    const TRANSFER_TEXT = `Eugenio Irarrazaval
+20829077-0
+Banco Santander / Cuenta Vista
+0-011-00-46130-3
+eirarrazavalr@gmail.com`;
+    const UNAVAILABLE_MESSAGE = "Este formulario todavía no se encuentra disponible. Se habilitará cuando estén definidos los partidos de esta ronda.";
+    const FUTURE_SECTIONS = ["dieciseisavos", "octavos", "cuartos", "semifinales", "final"];
+
+    const sections = Array.from(document.querySelectorAll(".app-section"));
+    const VALID_SECTIONS = new Set([
+      "menu",
+      "bases",
+      "fase-grupos",
+      "dieciseisavos",
+      "octavos",
+      "cuartos",
+      "semifinales",
+      "final"
+    ]);
+
+    function normalizeSectionId(sectionId) {
+      return VALID_SECTIONS.has(sectionId) ? sectionId : "menu";
+    }
+
+    function getDeadline(sectionId) {
+      return DEADLINES[sectionId] || null;
+    }
+
+    function isSectionEnabled(sectionId) {
+      const deadline = getDeadline(sectionId);
+      if (!deadline) return true;
+      return Boolean(deadline.habilitado);
+    }
+
+    function isSectionClosed(sectionId) {
+      const deadline = getDeadline(sectionId);
+      if (!deadline || !deadline.deadline_iso) return false;
+      return new Date() >= new Date(deadline.deadline_iso);
+    }
+
+    function getDeadlineMessage(sectionId) {
+      const deadline = getDeadline(sectionId);
+      if (!deadline) return "";
+      return deadline.mensaje_cerrado || "Formulario fuera de plazo.";
+    }
+
+    function getDeadlineDisplay(sectionId) {
+      const deadline = getDeadline(sectionId);
+      if (!deadline || !deadline.deadline_iso) return "";
+
+      if (deadline.deadline_label) {
+        return deadline.deadline_label;
+      }
+
+      const fecha = new Date(deadline.deadline_iso);
+      if (Number.isNaN(fecha.getTime())) return "";
+
+      return new Intl.DateTimeFormat("es-CL", {
+        timeZone: "America/Santiago",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(fecha);
+    }
+
+    function sectionUrl(sectionId) {
+      return `${window.location.pathname}${window.location.search}#${sectionId}`;
+    }
+
+    function showSection(sectionId, options = {}) {
+      const normalizedSectionId = normalizeSectionId(sectionId);
+      const target = document.querySelector(`#section-${normalizedSectionId}`);
+      if (!target) {
+        return;
+      }
+
+      sections.forEach((section) => {
+        section.hidden = section !== target;
+      });
+
+      if (options.updateHistory !== false) {
+        window.history.pushState(
+          { sectionId: normalizedSectionId },
+          "",
+          sectionUrl(normalizedSectionId)
+        );
+      }
+
+      window.scrollTo({ top: 0, behavior: options.instantScroll ? "auto" : "smooth" });
+    }
+
+    window.showSection = showSection;
+
+    document.querySelectorAll("[data-section-target]").forEach((button) => {
+      button.addEventListener("click", () => {
+        showSection(button.dataset.sectionTarget);
+      });
+    });
+
+    const initialSection = normalizeSectionId(window.location.hash.replace("#", "") || "menu");
+    window.history.replaceState(
+      { sectionId: initialSection },
+      "",
+      sectionUrl(initialSection)
+    );
+    showSection(initialSection, { updateHistory: false, instantScroll: true });
+
+    window.addEventListener("popstate", (event) => {
+      const sectionFromState = event.state && event.state.sectionId;
+      const sectionFromHash = window.location.hash.replace("#", "");
+      const targetSection = normalizeSectionId(sectionFromState || sectionFromHash || "menu");
+      showSection(targetSection, { updateHistory: false, instantScroll: true });
+    });
+
+    const form = document.querySelector("#predictionForm");
+    const nombreInput = document.querySelector("#nombre");
+    const submitButton = document.querySelector("#submitButton");
+    const progressText = document.querySelector("#progressText");
+    const progressBar = document.querySelector("#progressBar");
+    const statusMessage = document.querySelector("#statusMessage");
+    const faseDeadlineNotice = document.querySelector("#faseDeadlineNotice");
+    const copyTransferButton = document.querySelector("#copyTransferButton");
+    const copyTransferStatus = document.querySelector("#copyTransferStatus");
+    const matchCards = Array.from(document.querySelectorAll("[data-match-card]"));
+
+    function setStatus(message, type = "") {
+      statusMessage.textContent = message;
+      statusMessage.className = `status-message ${type}`.trim();
+    }
+
+    function faseGruposBloqueada() {
+      return !isSectionEnabled("fase-grupos") || isSectionClosed("fase-grupos");
+    }
+
+    function setFormFieldsDisabled(disabled) {
+      form.querySelectorAll("input, select, textarea").forEach((field) => {
+        field.disabled = disabled;
+      });
+    }
+
+    function updateFaseGruposDeadlineUi() {
+      const bloqueada = faseGruposBloqueada();
+      const deadlineDisplay = getDeadlineDisplay("fase-grupos");
+      let message = deadlineDisplay
+        ? `Plazo para responder: ${deadlineDisplay} hrs Chile.`
+        : "";
+
+      if (bloqueada) {
+        message = getDeadlineMessage("fase-grupos") || "Formulario fuera de plazo. Ya no es posible enviar respuestas.";
+        setStatus(message, "error");
+      }
+
+      faseDeadlineNotice.textContent = message;
+      faseDeadlineNotice.hidden = !message;
+      faseDeadlineNotice.classList.toggle("error", bloqueada);
+      form.classList.toggle("is-locked", bloqueada);
+      setFormFieldsDisabled(bloqueada);
+    }
+
+    function updateFutureSectionMessages() {
+      FUTURE_SECTIONS.forEach((sectionId) => {
+        const messageElement = document.querySelector(`[data-unavailable-message="${sectionId}"]`);
+        if (!messageElement) return;
+
+        if (isSectionEnabled(sectionId) && isSectionClosed(sectionId)) {
+          messageElement.textContent = getDeadlineMessage(sectionId) || "Formulario fuera de plazo.";
+          return;
+        }
+
+        messageElement.textContent = UNAVAILABLE_MESSAGE;
+      });
+    }
+
+    function setCopyTransferStatus(message, type = "ok") {
+      copyTransferStatus.textContent = message;
+      copyTransferStatus.className = `status-message ${type}`.trim();
+    }
+
+    function copyWithFallback(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+
+    async function copyTransferData() {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(TRANSFER_TEXT);
+        } else {
+          copyWithFallback(TRANSFER_TEXT);
+        }
+
+        setCopyTransferStatus("Datos copiados al portapapeles.", "ok");
+      } catch (error) {
+        console.error(error);
+        setCopyTransferStatus("No se pudieron copiar automáticamente. Intenta copiar los datos manualmente.", "error");
+      }
+    }
+
+    copyTransferButton.addEventListener("click", copyTransferData);
+
+    function respuestasCompletas() {
+      return matchCards.filter((card) => card.querySelector("input[type='radio']:checked")).length;
+    }
+
+    function campeonSeleccionado() {
+      const seleccion = form.querySelector('input[name="campeon"]:checked');
+      return seleccion ? seleccion.value : "";
+    }
+
+    function datosBaseCompletos() {
+      return Boolean(
+        nombreInput.value.trim() &&
+        campeonSeleccionado()
+      );
+    }
+
+    function timestampChile() {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Santiago",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+        hourCycle: "h23"
+      }).formatToParts(new Date()).reduce((acc, part) => {
+        if (part.type !== "literal") {
+          acc[part.type] = part.value;
+        }
+        return acc;
+      }, {});
+
+      return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}:${parts.second}`;
+    }
+
+    function actualizarEstado() {
+      updateFaseGruposDeadlineUi();
+      const respondidas = respuestasCompletas();
+      const total = matchCards.length;
+      const porcentaje = total ? (respondidas / total) * 100 : 0;
+      const faseGruposBloqueadaAhora = faseGruposBloqueada();
+
+      progressText.textContent = `Respondidas ${respondidas} de ${total}`;
+      progressBar.style.width = `${porcentaje}%`;
+
+      document.querySelectorAll(".option-pill").forEach((label) => {
+        const input = label.querySelector("input");
+        label.classList.toggle("is-selected", Boolean(input && input.checked));
+      });
+
+      matchCards.forEach((card) => {
+        const checked = card.querySelector("input[type='radio']:checked");
+        const state = card.querySelector("[data-match-state]");
+        card.classList.toggle("is-complete", Boolean(checked));
+        state.textContent = checked ? "Respondido" : "Sin responder";
+      });
+
+      submitButton.disabled = faseGruposBloqueadaAhora || !(datosBaseCompletos() && respondidas === total);
+    }
+
+    function construirPayload() {
+      const respuestas = PARTIDOS.map((partido) => {
+        const seleccion = form.querySelector(`input[name="partido_${partido.numero}"]:checked`);
+        return {
+          partido: partido.numero,
+          equipo_a: partido.equipo_a,
+          equipo_b: partido.equipo_b,
+          respuesta: seleccion ? seleccion.value : ""
+        };
+      });
+
+      const plano = respuestas.reduce((acc, item) => {
+        acc[`${ETAPA}_P${item.partido}`] = item.respuesta;
+        return acc;
+      }, {});
+      plano["grupo"] = GRUPO;
+
+      return {
+        timestamp: timestampChile(),
+        nombre: nombreInput.value.trim(),
+        campeon: campeonSeleccionado(),
+        etapa: ETAPA,
+        grupo: GRUPO,
+        respuestas,
+        plano,
+        metadata: FORM_METADATA
+      };
+    }
+
+    async function enviarFormulario(event) {
+      event.preventDefault();
+
+      if (faseGruposBloqueada()) {
+        setStatus(
+          getDeadlineMessage("fase-grupos") || "Formulario fuera de plazo. Ya no es posible enviar respuestas.",
+          "error"
+        );
+        actualizarEstado();
+        return;
+      }
+
+      actualizarEstado();
+
+      if (submitButton.disabled) {
+        setStatus("Completa todos los campos antes de enviar.", "warn");
+        return;
+      }
+
+      const confirmado = window.confirm("¿Seguro que quieres enviar tus respuestas?");
+      if (!confirmado) {
+        return;
+      }
+
+      const urlConfigurada = GOOGLE_APPS_SCRIPT_URL &&
+        GOOGLE_APPS_SCRIPT_URL !== "PEGAR_AQUI_URL_DE_APPS_SCRIPT";
+
+      if (!urlConfigurada) {
+        setStatus("Formulario generado correctamente, pero falta configurar la URL de Google Apps Script.", "warn");
+        console.log("Payload listo para enviar:", construirPayload());
+        return;
+      }
+
+      submitButton.disabled = true;
+      setStatus("Enviando respuestas...", "");
+
+
+      try {
+        await fetch(GOOGLE_APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(construirPayload())
+        });
+
+        setStatus("¡Respuestas enviadas correctamente!", "ok");
+        form.reset();
+      } catch (error) {
+        console.error(error);
+        setStatus("Hubo un problema al enviar. Revisa tu conexión o intenta nuevamente.", "error");
+      } finally {
+        actualizarEstado();
+      }   
+    }
+
+    form.addEventListener("input", actualizarEstado);
+    form.addEventListener("change", actualizarEstado);
+    form.addEventListener("submit", enviarFormulario);
+    updateFutureSectionMessages();
+    actualizarEstado();
+  </script>
+</body>
+</html>
